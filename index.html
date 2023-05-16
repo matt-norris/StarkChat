@@ -33,6 +33,8 @@
 
             const data = await response.text();
             console.log(data);
+            const questionInput = document.getElementById('questionInput');
+            questionInput.value = data;
         }
 
         async function toggleRecording() {
@@ -55,9 +57,40 @@
                 recordButton.textContent = "Stop Recording";
             }
         }
+
+        async function submitQuestion() {
+            const questionInput = document.getElementById('questionInput');
+            const question = questionInput.value;
+
+            if (!question) {
+                alert('Please enter a question');
+                return;
+            }
+
+            const responseDiv = document.getElementById('response');
+
+            // Send the question to your Python script and get the response
+            const url = 'http://localhost:5100/ask_question';  // Change this URL to the appropriate endpoint in your Python script
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: question })
+            };
+
+            const response = await fetch(url, requestOptions);
+            const data = await response.json();
+
+            // Display the response on the page
+            responseDiv.innerHTML = `Answer: ${data}`;
+        }
+
     </script>
 </head>
 <body>
+<label for="questionInput"></label><input type="text" id="questionInput" placeholder="Enter your question">
+    <button id="submitQuestion" onclick="submitQuestion()">Submit Question</button>
+    <div id="response"></div>
+
     <button id="recordButton" onclick="toggleRecording()">Start Recording</button>
 </body>
 </html>

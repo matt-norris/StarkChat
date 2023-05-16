@@ -1,7 +1,8 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import whisper
 import os
+from gpt4free import usesless
 app = Flask(__name__)
 
 model = whisper.load_model("small")
@@ -29,6 +30,20 @@ def transcribe_audio():
     transcription = result["text"]
 
     return transcription
+
+
+@app.route('/ask_question', methods=['POST'])
+def ask_question():
+    message_id = ""
+    question = request.json.get('question', '')
+    if not question:
+        return jsonify({'error': 'No question provided'}), 400
+
+    req = usesless.Completion.create(prompt=question, parentMessageId=message_id)
+    answer = req['text']
+    message_id = req["id"]
+
+    return jsonify({'answer': answer})
 
 
 if __name__ == '__main__':
