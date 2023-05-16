@@ -4,7 +4,7 @@ import whisper
 import os
 from gpt4free import usesless
 app = Flask(__name__)
-
+api_key = "5588257c8b7ce1107f7b7f374eef211d"
 model = whisper.load_model("small")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -21,20 +21,20 @@ def transcribe_audio():
     save_path = "/Users/mattnorris/Desktop/Files/Personal Projects/StarkChat2/"
 
     # Use the current timestamp to create a unique file name for each audio file
-    file_name = str(1) + ".mp3"
+    file_name = "prompt.mp3"
 
     # Save the audio file
     audio_file.save(os.path.join(save_path, file_name))
 
-    result = model.transcribe("1.mp3")
+    result = model.transcribe("prompt.mp3")
     transcription = result["text"]
 
     return transcription
 
-
+id = "chatcmpl-7GwNVB25cgHQzEtDOpWXXWLHA1iGA"
 @app.route('/ask_question', methods=['POST'])
 def ask_question():
-    message_id = ""
+    message_id = id
     question = request.json.get('question', '')
     if not question:
         return jsonify({'error': 'No question provided'}), 400
@@ -43,7 +43,7 @@ def ask_question():
     answer = req['text']
     message_id = req["id"]
 
-    return jsonify({'answer': answer})
+    return jsonify({'answer': answer, "id": message_id})
 
 
 if __name__ == '__main__':

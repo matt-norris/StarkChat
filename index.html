@@ -81,7 +81,7 @@
             const data = await response.json();
 
             // Display the response on the page
-            responseDiv.innerHTML = `Answer: ${data}`;
+            responseDiv.innerHTML = `Answer: ${data.answer} \`Answer: ${data.id}\``;
         }
 
     </script>
