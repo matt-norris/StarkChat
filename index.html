@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <title>Audio Recorder</title>
+    <script>
+        let mediaRecorder;
+        let chunks = [];
+
+        async function sendAudio(blob) {
+            const formData = new FormData();
+            formData.append('audio', blob, 'audio.mp3');
+
+            const response = await fetch('http://localhost:5100/transcribe', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.text();
+            console.log(data);
+        }
+
+        async function toggleRecording() {
+            const recordButton = document.getElementById('recordButton');
+
+            if (mediaRecorder && mediaRecorder.state === "recording") {
+                mediaRecorder.stop();
+                recordButton.textContent = "Start Recording";
+            } else {
+                chunks = [];
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = event => chunks.push(event.data);
+                mediaRecorder.onstop = () => {
+                    // When recording stops, construct a Blob from the recorded audio chunks
+                    const blob = new Blob(chunks, { type: 'audio/mp3' });
+                    sendAudio(blob);
+                };
+                mediaRecorder.start();
+                recordButton.textContent = "Stop Recording";
+            }
+        }
+    </script>
+</head>
+<body>
+    <button id="recordButton" onclick="toggleRecording()">Start Recording</button>
+</body>
+</html>
