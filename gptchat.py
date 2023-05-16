@@ -1,13 +1,10 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 import whisper
-import librosa
-import numpy as np
-from tempfile import NamedTemporaryFile
-
+import os
 app = Flask(__name__)
 
-model = whisper.load_model("base")
+model = whisper.load_model("small")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 
@@ -19,15 +16,16 @@ def transcribe_audio():
 
     audio_file = request.files['audio']
 
-    # Create a temporary file and save the audio data into it
-    temp_file = NamedTemporaryFile(delete=False)
-    audio_file.save(temp_file.name)
+    # Define a directory path to save the audio files
+    save_path = "/Users/mattnorris/Desktop/Files/Personal Projects/StarkChat2/"
 
-    # Use librosa to load the temporary audio file into a numpy array
-    audio_data, _ = librosa.load(temp_file.name, sr=None, mono=True)
-    audio_data = np.array(audio_data, dtype=np.float32)
+    # Use the current timestamp to create a unique file name for each audio file
+    file_name = str(1) + ".mp3"
 
-    result = model.transcribe(audio_data)
+    # Save the audio file
+    audio_file.save(os.path.join(save_path, file_name))
+
+    result = model.transcribe("1.mp3")
     transcription = result["text"]
 
     return transcription

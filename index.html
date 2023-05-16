@@ -6,7 +6,23 @@
         let mediaRecorder;
         let chunks = [];
 
+        function downloadAudio(blob) {
+            // Create an object URL for the blob
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            // the filename you want
+            a.download = 'test.mp3';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
         async function sendAudio(blob) {
+            // Download the audio before sending it
+            downloadAudio(blob);
+
             const formData = new FormData();
             formData.append('audio', blob, 'audio.mp3');
 
