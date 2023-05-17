@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import whisper
 import os
-from gpt4free import you
 import requests
+from gpt4free import you
 import base64
 
 app = Flask(__name__)
@@ -48,7 +48,7 @@ def ask_question():
     gptresponse = you.Completion.create(prompt=question, detailed=True, include_links=True,  chat=chat)
     chat.append({"question": question, "answer": gptresponse.text})
 
-    #Converting to Voice stuff
+    # Converting to Voice stuff
     # CHUNK_SIZE = 1024
     # url = "https://api.elevenlabs.io/v1/text-to-speech/I4BiQB0HqUz18tjI4kWN"
     #

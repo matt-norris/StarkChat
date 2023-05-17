@@ -1,47 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
-        <meta charset="UTF-8">
+     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stark Chat by Matthew Norris</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-      <style>
-       body {
-            height: 100vh;
-            background-color: #202020;
-        }
-        .chat-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: calc(100vh - 56px);  /* Subtract the height of the navbar */
-        }
-        .card {
-            background-color: #303030;
-            color: #fbca03;
-            border-color: #fbca03;
-        }
-        .btn-primary {
-            background-color: #fbca03;
-            border-color: #fbca03;
-            color: #303030;
-        }
-        .btn-secondary {
-            background-color: #aa0505;
-            border-color: #aa0505;
-            color: #fbca03;
-        }
-        .form-control {
-            background-color: #404040;
-            color: #fbca03;
-            border-color: #fbca03;
-        }
-    </style>
 
+    <!-- Add a link to your new CSS file -->
+    <link rel="stylesheet" href="styles.css">
 
     <script>
+
         let mediaRecorder;
         let chunks = [];
 
@@ -57,6 +28,19 @@
             a.click();
             window.URL.revokeObjectURL(url);
         }
+
+        function appendMessage(message, sender) {
+    const messageElement = document.createElement('div');
+
+    if (sender === 'user') {
+        messageElement.classList.add('user-message');
+    } else if (sender === 'bot') {
+        messageElement.classList.add('bot-message');
+    }
+
+    messageElement.textContent = message;
+    document.getElementById('message-container').append(messageElement);
+}
 
         async function sendAudio(blob) {
             // Download the audio before sending it
@@ -108,6 +92,15 @@
 
     const responseDiv = document.getElementById('response');
 
+      // Display the user's question in the chat window
+    const chatWindow = document.getElementById('chat-window');
+    const userMessage = document.createElement('div');
+    userMessage.className = 'chat-message user';
+    userMessage.textContent = question;
+    chatWindow.appendChild(userMessage);
+
+       // Scroll to the bottom of the chat window
+    chatWindow.scrollTop = chatWindow.scrollHeight;
     // Send the question to your Python script and get the response
     const url = 'http://localhost:5300/ask_question';  // Change this URL to the appropriate endpoint in your Python script
     const requestOptions = {
@@ -120,8 +113,15 @@
     const data = await response.json();
     console.log(data)
 
-    // Display the response on the page
-    responseDiv.innerHTML = `Answer: ${data.answer}`;
+        // Display the bot's response in the chat window
+    const botMessage = document.createElement('div');
+    botMessage.className = 'chat-message bot';
+    botMessage.textContent = data.answer;
+    chatWindow.appendChild(botMessage);
+
+    // Scroll to the bottom of the chat window
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+
 
     // Handle the base64 encoded audio string
     if (data.audio) {
@@ -135,11 +135,30 @@
         audio.play();
     }
 }
-
+ document.addEventListener("DOMContentLoaded", function() {
+    // Your code
+    document.getElementById('start-chat-btn').addEventListener('click', function() {
+        document.getElementById('landing-page').hidden = true;
+        document.getElementById('chat-page').hidden = false;
+    });
+});
 
     </script>
 </head>
 <body>
+   <div id="landing-page">
+    <div class="card  glass-card mx-auto">
+        <div class="card-body text-center">
+    <div class="card-body">
+      <h1 class="card-title">Welcome to Stark Chat!</h1>
+      <p class="card-text">Your personal assistant with the personality and voice of Tony Stark.</p>
+      <button id="start-chat-btn" class="btn btn-primary">Start Chat</button>
+    </div>
+           </div>
+  </div>
+</div>
+
+      <div id="chat-page" hidden>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Stark Chat</a>
@@ -162,18 +181,15 @@
         </div>
     </nav>
 
-    <div class="chat-container ">
-        <div class="card bg-dark">
-            <div class="card-header">
-                Stark Chat
+    <div class="chat-container">
+            <div class="chat-header">Stark Chat</div>
+            <div id="chat-window">
+                <!-- Chat messages will be added here -->
             </div>
-            <div class="card-body">
-                <div class="input-group mb-3">
-                    <input type="text" id="questionInput" class="form-control" placeholder="Enter your question" aria-label="Question input">
-                    <button id="submitQuestion" class="btn btn-primary" onclick="submitQuestion()">Submit</button>
-                </div>
-                <div id="response" class="mb-3"></div>
-                <button id="recordButton" class="btn btn-secondary" onclick="toggleRecording()">Start Recording</button>
+            <div class="chat-input-area">
+                <input type="text" id="questionInput" placeholder="Enter your question">
+                <button id="submitQuestion" onclick="submitQuestion()">Send</button>
+                <button id="recordButton" onclick="toggleRecording()">Record</button>
             </div>
         </div>
     </div>
