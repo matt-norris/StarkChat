@@ -5,6 +5,7 @@ import os
 import requests
 from gpt4free import you
 import base64
+import Audio
 
 app = Flask(__name__)
 
@@ -22,7 +23,7 @@ def transcribe_audio():
     audio_file = request.files['audio']
 
     # Define a directory path to save the audio files
-    save_path = "/Users/mattnorris/Desktop/Files/Personal Projects/StarkChat2/"
+    save_path = "./Audio/"
 
     # Use the current timestamp to create a unique file name for each audio file
     file_name = "prompt.mp3"
@@ -30,7 +31,7 @@ def transcribe_audio():
     # Save the audio file
     audio_file.save(os.path.join(save_path, file_name))
 
-    result = model.transcribe("prompt.mp3")
+    result = model.transcribe(os.path.join(save_path, file_name))
     transcription = result["text"]
 
     return transcription
@@ -74,7 +75,7 @@ def ask_question():
     #            f.write(chunk)
 
     # Encode the audio file as base64
-    with open('output.mp3', 'rb') as audio_file:
+    with open('./Audio/output.mp3', 'rb') as audio_file:
         audio_base64bytes = base64.b64encode(audio_file.read())
         audio_base64string = audio_base64bytes.decode('utf-8')
 
