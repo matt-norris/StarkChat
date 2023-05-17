@@ -26,7 +26,7 @@
             const formData = new FormData();
             formData.append('audio', blob, 'audio.mp3');
 
-            const response = await fetch('http://localhost:5100/transcribe', {
+            const response = await fetch('http://localhost:5300/transcribe', {
                 method: 'POST',
                 body: formData
             });
@@ -58,31 +58,45 @@
             }
         }
 
-        async function submitQuestion() {
-            const questionInput = document.getElementById('questionInput');
-            const question = questionInput.value;
+ async function submitQuestion() {
+    const questionInput = document.getElementById('questionInput');
+    const question = questionInput.value;
 
-            if (!question) {
-                alert('Please enter a question');
-                return;
-            }
+    if (!question) {
+        alert('Please enter a question');
+        return;
+    }
 
-            const responseDiv = document.getElementById('response');
+    const responseDiv = document.getElementById('response');
 
-            // Send the question to your Python script and get the response
-            const url = 'http://localhost:5100/ask_question';  // Change this URL to the appropriate endpoint in your Python script
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question: question })
-            };
+    // Send the question to your Python script and get the response
+    const url = 'http://localhost:5300/ask_question';  // Change this URL to the appropriate endpoint in your Python script
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: question })
+    };
 
-            const response = await fetch(url, requestOptions);
-            const data = await response.json();
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    console.log(data)
 
-            // Display the response on the page
-            responseDiv.innerHTML = `Answer: ${data.answer} \`Answer: ${data.id}\``;
-        }
+    // Display the response on the page
+    responseDiv.innerHTML = `Answer: ${data.answer}`;
+
+    // Handle the base64 encoded audio string
+    if (data.audio) {
+        const audioData = atob(data.audio).split('').map(c => c.charCodeAt(0));
+        const audioBytes = new Uint8Array(audioData);
+        const blob = new Blob([audioBytes], {type: 'audio/mpeg'});
+        const audioUrl = URL.createObjectURL(blob);
+
+        // Create a new audio element and play it
+        const audio = new Audio(audioUrl);
+        audio.play();
+    }
+}
+
 
     </script>
 </head>

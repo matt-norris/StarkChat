@@ -2,9 +2,13 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
 import whisper
 import os
-from gpt4free import usesless
+from gpt4free import you
+import requests
+import base64
+
 app = Flask(__name__)
-api_key = "5588257c8b7ce1107f7b7f374eef211d"
+
+api_key_user = "YOUR ELEVEN LABS API KEY HERE"
 model = whisper.load_model("small")
 CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -31,20 +35,52 @@ def transcribe_audio():
 
     return transcription
 
-id = "chatcmpl-7GwNVB25cgHQzEtDOpWXXWLHA1iGA"
+chat = [{'question': "I want you to channel your inner Tony Stark from the Marvel Universe. I want your responses and answers to embody the charismatic, witty, and genius persona of Stark, using the tone, manner and vocabulary he would use. No need for explanatory notes. Just respond in pure Stark style. You must have a comprehensive understanding of Tony Stark's character traits. My first sentence is, “Hi Tony.”", 'answer': "Greetings, my friend. It's always a pleasure to hear from another genius such as myself. How can I assist you today?"}]
+
+
 @app.route('/ask_question', methods=['POST'])
 def ask_question():
-    message_id = id
+
     question = request.json.get('question', '')
     if not question:
         return jsonify({'error': 'No question provided'}), 400
+    # simple request with links and details
+    gptresponse = you.Completion.create(prompt=question, detailed=True, include_links=True,  chat=chat)
+    chat.append({"question": question, "answer": gptresponse.text})
 
-    req = usesless.Completion.create(prompt=question, parentMessageId=message_id)
-    answer = req['text']
-    message_id = req["id"]
+    #Converting to Voice stuff
+    # CHUNK_SIZE = 1024
+    # url = "https://api.elevenlabs.io/v1/text-to-speech/I4BiQB0HqUz18tjI4kWN"
+    #
+    # headers = {
+    #     "Accept": "audio/mpeg",
+    #     "Content-Type": "application/json",
+    #     "xi-api-key": api_key
+    # }
+    #
+    # data = {
+    #     "text": gptresponse.text,
+    #     "model_id": "eleven_monolingual_v1",
+    #     "voice_settings": {
+    #         "stability": 0,
+    #         "similarity_boost": 0
+    #     }
+    # }
+    #
+    # response = requests.post(url, json=data, headers=headers)
+    # with open('output.mp3', 'wb') as f:
+    #    for chunk in response.iter_content(chunk_size=CHUNK_SIZE):
+    #        if chunk:
+    #            f.write(chunk)
 
-    return jsonify({'answer': answer, "id": message_id})
+    # Encode the audio file as base64
+    with open('output.mp3', 'rb') as audio_file:
+        audio_base64bytes = base64.b64encode(audio_file.read())
+        audio_base64string = audio_base64bytes.decode('utf-8')
+
+    return jsonify({'answer': gptresponse.text, 'audio': audio_base64string})
+    # return jsonify({'answer': gptresponse.text, 'audio': audio_base64string})
 
 
 if __name__ == '__main__':
-    app.run(port=5100, debug=True)
+    app.run(port=5300, debug=True)
