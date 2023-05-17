@@ -27,29 +27,29 @@ Installation
 
 Before you can run the project, you need to make sure Python and Flask are installed on your machine. If you don't have them installed, you can download Python here and install Flask using pip:
 
-bash
-'''
+
+```
 pip install flask
-'''
+```
 Next, clone the repository to your local machine:
 
-'''
+```
 git clone https://github.com/yourusername/yourrepository.git
-'''
+```
 Install the required Python packages:
 
-'''
+```
 pip install -r requirements.txt
-'''
+```
 Make sure to replace "yourapikey" in the Python script with the API key you obtained from Eleven Labs.
 
 Usage
 
 To start the server, navigate to the project directory and run:
 
-'''
+```
 python gptchat.py
-'''
+```
 The server will start on localhost:5300. Open your web browser and navigate to this address. You should see the chatbot interface. You can type your question in the input box or click the "Start Recording" button to ask your question verbally.
 
 Contributing
