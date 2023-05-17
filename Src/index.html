@@ -43,8 +43,7 @@
 }
 
         async function sendAudio(blob) {
-            // Download the audio before sending it
-            downloadAudio(blob);
+
 
             const formData = new FormData();
             formData.append('audio', blob, 'audio.mp3');
@@ -135,17 +134,27 @@
         audio.play();
     }
 }
- document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     // Your code
     document.getElementById('start-chat-btn').addEventListener('click', function() {
-        document.getElementById('landing-page').hidden = true;
+        document.getElementById('landing-page').classList.add('hide');  // Add the 'hide' class
         document.getElementById('chat-page').hidden = false;
     });
+
+    document.getElementById('landing-page').addEventListener('transitionend', function() {
+        if (this.classList.contains('hide')) {
+            this.classList.remove('hide');
+            this.hidden = true;
+        }
+    });
 });
+
 
     </script>
 </head>
 <body>
+
+
    <div id="landing-page">
     <div class="card  glass-card mx-auto">
         <div class="card-body text-center">
@@ -158,40 +167,75 @@
   </div>
 </div>
 
-      <div id="chat-page" hidden>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Stark Chat</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Features</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Pricing</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<div id="chat-page" hidden>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Stark Chat</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Features</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Pricing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">How to Use</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">FAQ</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Contact</a>
+        </li>
 
-    <div class="chat-container">
-            <div class="chat-header">Stark Chat</div>
-            <div id="chat-window">
-                <!-- Chat messages will be added here -->
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- How to use card -->
+            <div class="col-md-4">
+                <div class="how-to-use-card-container">
+                    <div class="card how-to-use-card">
+                        <div class="card-header">
+                            <h4 class="card-title">How to Use</h4>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">Step 1: Enter your question in the input field or click "Record" to use voice input.</p>
+                            <p class="card-text">Step 2: Press "Send" to submit your question.</p>
+                            <p class="card-text">Step 3: Wait for Stark Chat to respond with an answer.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="chat-input-area">
-                <input type="text" id="questionInput" placeholder="Enter your question">
-                <button id="submitQuestion" onclick="submitQuestion()">Send</button>
-                <button id="recordButton" onclick="toggleRecording()">Record</button>
+
+            <!-- Chat container -->
+            <div class="col-md-8">
+                <div class="chat-container">
+                    <div class="chat-header">Stark Chat</div>
+                    <div id="chat-window">
+                        <!-- Chat messages will be added here -->
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="questionInput" placeholder="Enter your question">
+                        <button id="submitQuestion" onclick="submitQuestion()">Send</button>
+                        <button id="recordButton" onclick="toggleRecording()">Record</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
+
 </body>
 </html>
