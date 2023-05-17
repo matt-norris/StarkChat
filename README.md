@@ -27,6 +27,8 @@ You will also need to create a voice on Eleven Labs so that the chatbot will res
 ## About the Project
 
 This project demonstrates an innovative blend of technologies to create a conversational AI that can understand, generate, and vocalize language. The chatbot, role-playing as Tony Stark, delivers responses in his voice, further enhancing the user experience and giving Marvel fans a unique interaction opportunity.
+![Stark Chat System Architecture](https://github.com/matt-norris/StarkChat/assets/97650920/721f73b9-0410-49a3-822e-f988abb96dd7)
+
 
 ## Installation
 
