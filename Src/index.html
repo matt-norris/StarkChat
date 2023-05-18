@@ -129,6 +129,20 @@
         const blob = new Blob([audioBytes], {type: 'audio/mpeg'});
         const audioUrl = URL.createObjectURL(blob);
 
+          // Create a new audio element and append it to bot message
+        const audioElement = document.createElement('audio');
+        audioElement.src = [audioUrl];
+        audioElement.controls = true;
+
+        const playButton = document.createElement('button');
+        playButton.className = 'play-audio-button';
+        playButton.textContent = 'Play';
+        playButton.addEventListener('click', () => {
+            audioElement.play();
+        });
+
+
+        botMessage.appendChild(audioElement);
         // Create a new audio element and play it
         const audio = new Audio(audioUrl);
         audio.play();
