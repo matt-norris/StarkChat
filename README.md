@@ -41,7 +41,7 @@ pip install flask
 Next, clone the repository to your local machine:
 
 ```
-git clone https://github.com/yourusername/yourrepository.git
+git clone https://github.com/matt-norris/starkchat.git
 ```
 Install the required Python packages:
 
@@ -70,5 +70,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgements
 
 I would like to express my gratitude to OpenAI for the GPT and Whisper models, and to Eleven Labs for their text-to-speech service. This project would not have been possible without these advanced technologies.
-
-By integrating a variety of technologies and providing a highly interactive, immersive experience, this voice-activated AI Chatbot as Tony Stark represents a significant step forward in conversational AI technology. Users can look forward to engaging, informative, and entertaining interactions with the chatbot.
